@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuro Urgency Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="badge">Neurology · Clinical Tool</div>
+    <h1>Patient <em>Urgency</em> Assessment</h1>
+    <p class="subtitle">Enter patient demographics and select all presenting neurological symptoms to support triage evaluation.</p>
+  </header>
+
+  <form id="assessmentForm" novalidate>
+
+    <!-- Patient Info -->
+    <div class="card" style="animation-delay:0.05s">
+      <div class="card-header">
+        <div class="card-icon icon-blue">👤</div>
+        <div>
+          <div class="card-title">Patient Information</div>
+          <div class="card-desc">Basic demographic details</div>
+        </div>
+      </div>
+      <div class="fields-row">
+        <div class="field">
+          <label for="age">Patient Age <span class="required-star">*</span></label>
+          <input type="number" id="age" name="age" placeholder="e.g. 54" min="0" max="120">
+        </div>
+        <div class="field">
+          <label for="sex">Biological Sex</label>
+          <select id="sex" name="sex">
+            <option value="" disabled selected>Select…</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Not specified</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="symptom_duration">Symptom Duration <span class="required-star">*</span></label>
+          <div class="unit-row">
+            <input type="number" id="symptom_duration" name="symptom_duration" placeholder="e.g. 3" min="0">
+            <select class="unit-select" id="duration_unit" name="duration_unit">
+              <option value="minutes">min</option>
+              <option value="hours">hrs</option>
+              <option value="days" selected>days</option>
+              <option value="weeks">wks</option>
+              <option value="months">mos</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="onset">Symptom Onset</label>
+          <select id="onset" name="onset">
+            <option value="" disabled selected>Select…</option>
+            <option value="sudden">Sudden / Abrupt</option>
+            <option value="rapid">Rapid (minutes–hours)</option>
+            <option value="gradual">Gradual (days–weeks)</option>
+            <option value="progressive">Progressive / Worsening</option>
+            <option value="fluctuating">Fluctuating</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Neurological Symptoms -->
+    <div class="card" style="animation-delay:0.15s">
+      <div class="card-header">
+        <div class="card-icon icon-warn">🧠</div>
+        <div>
+          <div class="card-title">Neurological Symptoms</div>
+          <div class="card-desc">Select all symptoms currently present</div>
+        </div>
+      </div>
+
+      <div class="symptom-grid" id="symptomGrid">
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s1" name="symptoms" value="headache_severe">
+          <label for="s1">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Severe Headache</span>
+              <span class="symptom-detail">Thunderclap or worst-of-life onset</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s2" name="symptoms" value="focal_weakness">
+          <label for="s2">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Focal Weakness</span>
+              <span class="symptom-detail">Arm, leg, or facial droop</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s3" name="symptoms" value="speech_difficulty">
+          <label for="s3">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Speech Difficulty</span>
+              <span class="symptom-detail">Slurred speech or aphasia</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s4" name="symptoms" value="vision_loss">
+          <label for="s4">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Vision Changes</span>
+              <span class="symptom-detail">Loss, blurring, or diplopia</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s5" name="symptoms" value="altered_consciousness">
+          <label for="s5">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Altered Consciousness</span>
+              <span class="symptom-detail">Confusion or unresponsiveness</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s6" name="symptoms" value="seizure">
+          <label for="s6">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Seizure Activity</span>
+              <span class="symptom-detail">New onset or prolonged episode</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s7" name="symptoms" value="neck_stiffness">
+          <label for="s7">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Neck Stiffness</span>
+              <span class="symptom-detail">Nuchal rigidity or meningismus</span>
+              <span class="sev sev-high">High Priority</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s8" name="symptoms" value="dizziness">
+          <label for="s8">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Dizziness / Vertigo</span>
+              <span class="symptom-detail">Room spinning or severe imbalance</span>
+              <span class="sev sev-med">Moderate</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s9" name="symptoms" value="numbness">
+          <label for="s9">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Numbness / Tingling</span>
+              <span class="symptom-detail">Unilateral or diffuse paresthesias</span>
+              <span class="sev sev-med">Moderate</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s10" name="symptoms" value="memory_loss">
+          <label for="s10">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Memory Loss</span>
+              <span class="symptom-detail">Acute or progressive amnesia</span>
+              <span class="sev sev-med">Moderate</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s11" name="symptoms" value="ataxia">
+          <label for="s11">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Ataxia / Incoordination</span>
+              <span class="symptom-detail">Gait instability, frequent falling</span>
+              <span class="sev sev-med">Moderate</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s12" name="symptoms" value="tremor">
+          <label for="s12">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Tremor</span>
+              <span class="symptom-detail">Resting or intention tremor</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s13" name="symptoms" value="nausea_vomiting">
+          <label for="s13">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Nausea / Vomiting</span>
+              <span class="symptom-detail">Especially concurrent with headache</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s14" name="symptoms" value="photophobia">
+          <label for="s14">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Photophobia / Phonophobia</span>
+              <span class="symptom-detail">Sensitivity to light or sound</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="symptom-item">
+          <input type="checkbox" id="s15" name="symptoms" value="cognitive_decline">
+          <label for="s15">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Cognitive / Behavior Change</span>
+              <span class="symptom-detail">Personality shift or confusion</span>
+            </div>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="symptom-count">
+        <span class="count-pill" id="countPill">0</span>
+        <span>symptom(s) selected</span>
+      </div>
+    </div>
+
+    <!-- Clinical Notes -->
+    <div class="card" style="animation-delay:0.25s">
+      <div class="card-header">
+        <div class="card-icon icon-red">📋</div>
+        <div>
+          <div class="card-title">Clinical Notes</div>
+          <div class="card-desc">Additional context for the evaluating clinician</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" placeholder="e.g. relevant medical history, current medications, recent trauma, pertinent negatives…"></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="submit-row">
+      <button type="button" class="reset-btn" id="resetBtn">Clear Form</button>
+      <button type="submit" class="submit-btn">Run Assessment →</button>
+    </div>
+
+  </form>
+
+  <div class="result-banner" id="resultBanner">
+    <div class="result-label" id="resultLabel"></div>
+    <div class="result-text" id="resultText"></div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
