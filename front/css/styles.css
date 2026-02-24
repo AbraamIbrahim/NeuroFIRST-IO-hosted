@@ -168,6 +168,15 @@ select {
   appearance: none;
 }
 
+/* Remove native number spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+input[type=number] { -moz-appearance: textfield; }
+
 input:focus, select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(229,114,0,0.15);
@@ -178,10 +187,15 @@ input::placeholder { color: var(--muted); opacity: 0.6; }
 .unit-row {
   display: flex;
   gap: 8px;
-  align-items: stretch;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.unit-row input { flex: 1; }
+.unit-row #symptom_duration {
+  flex: 0 0 60px;
+  min-width: 60px;
+  text-align: center;
+}
 
 /* ── Stepper Buttons ── */
 .stepper-btn {

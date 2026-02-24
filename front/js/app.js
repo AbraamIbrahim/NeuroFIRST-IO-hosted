@@ -61,10 +61,21 @@ document.getElementById('assessmentForm').addEventListener('submit', (e) => {
   window.location.href = '/result/?' + params.toString();
 });
 
+// Symptom Duration: digits-only typing, max 2 digits
+document.getElementById('symptom_duration').addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
+});
+
+document.getElementById('symptom_duration').addEventListener('blur', (e) => {
+  const n = parseInt(e.target.value);
+  if (!isNaN(n)) e.target.value = n;
+});
+
 // Symptom Duration stepper buttons
 document.getElementById('durationPlus').addEventListener('click', () => {
   const input = document.getElementById('symptom_duration');
-  input.value = (parseInt(input.value) || 0) + 1;
+  const next = (parseInt(input.value) || 0) + 1;
+  if (next <= 99) input.value = next;
 });
 
 document.getElementById('durationMinus').addEventListener('click', () => {
