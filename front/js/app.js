@@ -48,20 +48,15 @@ document.getElementById('assessmentForm').addEventListener('submit', (e) => {
     return;
   }
 
-  const symptomList = selected.length
-    ? selected.map(s => s.replace(/_/g, ' ')).join(', ')
-    : 'none reported';
+  // Build query string and redirect to results page
+  const params = new URLSearchParams();
+  params.set('age', age);
+  params.set('symptom_duration', duration);
+  params.set('duration_unit', unit);
+  if (onset) params.set('onset', onset);
+  if (document.getElementById('sex').value) params.set('sex', document.getElementById('sex').value);
+  if (notes) params.set('notes', notes);
+  selected.forEach(s => params.append('symptoms', s));
 
-  banner.className  = 'result-banner info';
-  label.textContent = '✓ Assessment Captured';
-  text.innerHTML    =
-    `<strong>Age:</strong> ${age} yrs &nbsp;·&nbsp; ` +
-    `<strong>Duration:</strong> ${duration} ${unit}` +
-    (onset ? ` &nbsp;·&nbsp; <strong>Onset:</strong> ${onset}` : '') +
-    `<br><strong>Symptoms (${selected.length}):</strong> ${symptomList}` +
-    (notes ? `<br><strong>Notes:</strong> ${notes}` : '') +
-    `<br><br>Form data is ready to be passed to the urgency scoring algorithm.`;
-
-  banner.style.display = 'block';
-  banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window.location.href = '/result/?' + params.toString();
 });
