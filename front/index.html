@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neuro Urgency Assessment</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>NeuroFIRST Triage Assessment Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <div class="container">
   <header>
-    <div class="badge">Neurology · Clinical Tool</div>
-    <h1>Patient <em>Urgency</em> Assessment</h1>
+    <div class="badge">NeuroFIRST · Clinical Tool</div>
+    <h1>NeuroFIRST <em>Triage</em> Tool</h1>
     <p class="subtitle">Enter patient demographics and select all presenting neurological symptoms to support triage evaluation.</p>
   </header>
 
@@ -44,7 +44,9 @@
         <div class="field">
           <label for="symptom_duration">Symptom Duration <span class="required-star">*</span></label>
           <div class="unit-row">
-            <input type="number" id="symptom_duration" name="symptom_duration" placeholder="e.g. 3" min="0">
+            <button type="button" class="stepper-btn" id="durationMinus">−</button>
+            <input type="number" id="symptom_duration" name="symptom_duration" placeholder="0" min="0">
+            <button type="button" class="stepper-btn" id="durationPlus">+</button>
             <select class="unit-select" id="duration_unit" name="duration_unit">
               <option value="minutes">min</option>
               <option value="hours">hrs</option>

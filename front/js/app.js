@@ -6,7 +6,7 @@ function updateCount() {
   countPill.textContent = n;
 
   if (n === 0) {
-    countPill.style.background = 'rgba(79,195,247,0.15)';
+    countPill.style.background = 'rgba(229,114,0,0.15)';
     countPill.style.color = 'var(--accent)';
   } else if (n <= 3) {
     countPill.style.background = 'rgba(255,167,38,0.18)';
@@ -59,4 +59,16 @@ document.getElementById('assessmentForm').addEventListener('submit', (e) => {
   selected.forEach(s => params.append('symptoms', s));
 
   window.location.href = '/result/?' + params.toString();
+});
+
+// Symptom Duration stepper buttons
+document.getElementById('durationPlus').addEventListener('click', () => {
+  const input = document.getElementById('symptom_duration');
+  input.value = (parseInt(input.value) || 0) + 1;
+});
+
+document.getElementById('durationMinus').addEventListener('click', () => {
+  const input = document.getElementById('symptom_duration');
+  const val = parseInt(input.value) || 0;
+  if (val > 0) input.value = val - 1;
 });
