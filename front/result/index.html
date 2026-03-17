@@ -56,6 +56,44 @@
       50%       { box-shadow: 0 0 55px rgba(239,83,80,0.4); }
     }
 
+    @keyframes pulse-med {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,152,0,0.15); }
+      50%       { box-shadow: 0 0 40px rgba(255,152,0,0.30); }
+    }
+
+    /* ── Moderate urgency ring ── */
+    .ring-med {
+      border-color: #ff9800;
+      background: rgba(255,152,0,0.08);
+      box-shadow: 0 0 40px rgba(255,152,0,0.2);
+      animation: pulse-med 4s ease-in-out infinite;
+    }
+    .ring-med .urgency-level,
+    .ring-med .urgency-score { color: #ff9800; }
+
+    /* ── Minor urgency ring ── */
+    .ring-minor {
+      border-color: #2196f3;
+      background: rgba(33,150,243,0.08);
+      box-shadow: 0 0 20px rgba(33,150,243,0.10);
+      animation: none;
+    }
+    .ring-minor .urgency-level,
+    .ring-minor .urgency-score { color: #2196f3; }
+
+    /* ── Banner variants ── */
+    .rec-banner-med {
+      background: rgba(255,152,0,0.08);
+      border-color: rgba(255,152,0,0.40);
+    }
+    .rec-banner-med .rec-label { color: #ff9800; }
+
+    .rec-banner-minor {
+      background: rgba(33,150,243,0.06);
+      border-color: rgba(33,150,243,0.25);
+    }
+    .rec-banner-minor .rec-label { color: #2196f3; }
+
     .results-title {
       font-family: 'Inter', sans-serif;
       font-size: clamp(1.6rem, 4vw, 2.4rem);
@@ -188,18 +226,18 @@
 
   <div class="results-hero">
     <div class="badge">Neurology · Results</div>
-    <div class="urgency-ring">
+    <div class="urgency-ring" id="urgencyRing">
       <span class="urgency-level">HIGH</span>
       <span class="urgency-score">🚨</span>
       <span class="urgency-label">Urgency</span>
     </div>
-    <h1 class="results-title">Immediate Attention Required</h1>
+    <h1 class="results-title" id="resultsTitle">Immediate Attention Required</h1>
     <p class="results-subtitle">Based on the submitted symptoms and patient profile, this case has been flagged as high urgency.</p>
   </div>
 
-  <div class="recommendation-banner">
+  <div class="recommendation-banner" id="recBanner">
     <div class="rec-label">⚕ Clinical Recommendation</div>
-    <div class="rec-text">
+    <div class="rec-text" id="recText">
       Patient presents with indicators consistent with a high-urgency neurological event. Recommend immediate evaluation by attending neurologist. Do not delay workup pending further observation.
     </div>
   </div>
@@ -254,8 +292,57 @@
 
   <p class="disclaimer">This tool is intended to assist clinical decision-making and does not replace the judgment of a licensed medical professional.</p>
 
+  <!-- ── Dev Testing ── -->
+  <div id="devTestBar" style="margin-top:32px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; padding:16px; background:rgba(200,203,210,0.05); border:1px dashed rgba(200,203,210,0.2); border-radius:12px;">
+    <div style="width:100%; text-align:center; font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">Dev Testing</div>
+    <button class="submit-btn" onclick="setUrgency('high')"  style="max-width:140px; background:#ef5350;">Test High</button>
+    <button class="submit-btn" onclick="setUrgency('med')"   style="max-width:140px; background:#ff9800;">Test Med</button>
+    <button class="submit-btn" onclick="setUrgency('minor')" style="max-width:140px; background:#2196f3;">Test Minor</button>
+  </div>
+
 </div>
 
 <script src="results.js"></script>
+<script>
+  function setUrgency(level) {
+    const ring      = document.getElementById('urgencyRing');
+    const title     = document.getElementById('resultsTitle');
+    const banner    = document.getElementById('recBanner');
+    const recText   = document.getElementById('recText');
+    const lvlSpan   = ring.querySelector('.urgency-level');
+    const scoreSpan = ring.querySelector('.urgency-score');
+
+    ring.classList.remove('ring-med', 'ring-minor');
+    banner.classList.remove('rec-banner-med', 'rec-banner-minor');
+
+    const states = {
+      high: {
+        level: 'HIGH', icon: '🚨',
+        title: 'Immediate Attention Required',
+        rec:   'Patient presents with indicators consistent with a high-urgency neurological event. Recommend immediate evaluation by attending neurologist. Do not delay workup pending further observation.'
+      },
+      med: {
+        level: 'MOD', icon: '⚠️',
+        title: 'Prompt Evaluation Recommended',
+        rec:   'Patient presents with moderate-urgency indicators. Schedule evaluation within 24–48 hours. Monitor for symptom escalation and advise the patient to seek emergency care if symptoms worsen.',
+        ringClass: 'ring-med', bannerClass: 'rec-banner-med'
+      },
+      minor: {
+        level: 'LOW', icon: 'ℹ️',
+        title: 'Routine Follow-Up Suggested',
+        rec:   'Symptoms appear minor and non-urgent. Recommend routine outpatient follow-up. Patient should be advised to monitor symptoms and return if new or worsening neurological signs develop.',
+        ringClass: 'ring-minor', bannerClass: 'rec-banner-minor'
+      }
+    };
+
+    const s = states[level];
+    lvlSpan.textContent   = s.level;
+    scoreSpan.textContent = s.icon;
+    title.textContent     = s.title;
+    recText.textContent   = s.rec;
+    if (s.ringClass)   ring.classList.add(s.ringClass);
+    if (s.bannerClass) banner.classList.add(s.bannerClass);
+  }
+</script>
 </body>
 </html>
