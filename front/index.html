@@ -48,7 +48,6 @@
             <input type="text" inputmode="numeric" maxlength="2" id="symptom_duration" name="symptom_duration" placeholder="0">
             <button type="button" class="stepper-btn" id="durationPlus">+</button>
             <select class="unit-select" id="duration_unit" name="duration_unit">
-              <option value="minutes">min</option>
               <option value="hours">hrs</option>
               <option value="days" selected>days</option>
               <option value="weeks">wks</option>
@@ -68,6 +67,32 @@
           </select>
         </div>
       </div>
+
+      <!-- Clinical Flags -->
+      <div class="flags-label">Clinical Flags</div>
+      <div class="flags-row">
+        <div class="symptom-item">
+          <input type="checkbox" id="flag_pregnancy" name="flags" value="pregnancy">
+          <label for="flag_pregnancy">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Pregnant</span>
+              <span class="symptom-detail">Current or suspected pregnancy</span>
+            </div>
+          </label>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" id="flag_cancer" name="flags" value="cancer_treatment">
+          <label for="flag_cancer">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Undergoing Cancer Treatment</span>
+              <span class="symptom-detail">Active chemotherapy or immunosuppression</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
     </div>
 
     <!-- Neurological Symptoms -->

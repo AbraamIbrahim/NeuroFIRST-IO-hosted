@@ -134,6 +134,7 @@ h1 em {
 @media (max-width: 540px) {
   .fields-row { grid-template-columns: 1fr; }
   .symptom-grid { grid-template-columns: 1fr; }
+  .flags-row { grid-template-columns: 1fr; }
 }
 
 .field {
@@ -493,3 +494,20 @@ textarea::placeholder { color: var(--muted); opacity: 0.6; }
 }
 
 .required-star { color: var(--accent2); margin-left: 3px; }
+
+/* ── Clinical Flags ── */
+.flags-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+
+.flags-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
