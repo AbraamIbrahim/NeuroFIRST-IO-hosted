@@ -201,8 +201,13 @@ export default function Triage() {
 
           <div className="symptom-grid" id="symptomGrid">
             {filtered.map((s) => (
-              <div className="symptom-item" key={s} onClick={() => toggleSymptom(s)}>
-                <input type="checkbox" id={`sym_${s}`} checked={selected.has(s)} readOnly />
+              <div className="symptom-item" key={s}>
+                <input
+                  type="checkbox"
+                  id={`sym_${s}`}
+                  checked={selected.has(s)}
+                  onChange={() => toggleSymptom(s)}
+                />
                 <label htmlFor={`sym_${s}`}>
                   <div className="check-box" />
                   <div className="symptom-label-content">

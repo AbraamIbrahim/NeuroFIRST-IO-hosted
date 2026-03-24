@@ -290,7 +290,8 @@ input::placeholder { color: var(--muted); opacity: 0.6; }
 
 .symptom-item input:checked + label {
   border-color: var(--accent);
-  background: rgba(229,114,0,0.1);
+  background: rgba(229,114,0,0.14);
+  box-shadow: 0 0 0 1px rgba(229,114,0,0.2);
   color: var(--text);
 }
 
@@ -307,14 +308,15 @@ input::placeholder { color: var(--muted); opacity: 0.6; }
 .symptom-item input:checked + label .check-box {
   background: var(--accent);
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(229,114,0,0.18);
 }
 
 .check-box::after {
   content: '';
-  width: 5px; height: 9px;
-  border-right: 2px solid #0d1117;
-  border-bottom: 2px solid #0d1117;
-  transform: rotate(45deg) translateY(-1px);
+  width: 6px; height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) translate(-1px, -1px);
   opacity: 0;
   transition: opacity 0.15s;
   display: block;
