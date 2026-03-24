@@ -1,5 +1,17 @@
-import React, { useState, useMemo } from "react";
+import { useMemo, useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import "./triage.css";
+
+const SYMPTOM_ID_MAP: Record<string, string> = {
+  Headache: "s01",
+  Weakness: "s02",
+  Numbness: "s03",
+  "Vision changes": "s04",
+  "Speech difficulty": "s05",
+  Seizure: "s06",
+  Dizziness: "s07",
+  "Loss of consciousness": "s08",
+};
 
 const DEFAULT_SYMPTOMS = [
   "Headache",
@@ -12,7 +24,46 @@ const DEFAULT_SYMPTOMS = [
   "Loss of consciousness",
 ];
 
+function toBackendSex(value: string): "Male" | "Female" | "Other" {
+  if (value === "male") return "Male";
+  if (value === "female") return "Female";
+  return "Other";
+}
+
+function toBackendOnset(value: string): "Sudden" | "Rapid" | "Gradual" | "Fluctuating" {
+  if (value === "sudden") return "Sudden";
+  if (value === "rapid") return "Rapid";
+  if (value === "gradual") return "Gradual";
+  return "Fluctuating";
+}
+
+function toBackendDurationUnit(value: string): "min" | "hrs" | "days" | "wks" | "mos" {
+  if (value === "hours") return "hrs";
+  if (value === "weeks") return "wks";
+  if (value === "months") return "mos";
+  return "days";
+}
+
+interface ResultsState {
+  age: string;
+  sex: string;
+  duration: string;
+  onset: string;
+  symptoms: string[];
+  notes: string;
+  apiAssessment: {
+    age: number;
+    sex: "Male" | "Female" | "Other";
+    symptom_duration_num: number;
+    symptom_duration_qualifier: "min" | "hrs" | "days" | "wks" | "mos";
+    symptom_onset: "Sudden" | "Rapid" | "Gradual" | "Fluctuating";
+    symptoms: string[];
+    notes: string;
+  };
+}
+
 export default function Triage() {
+  const navigate = useNavigate();
   const [age, setAge] = useState<string>("");
   const [sex, setSex] = useState<string>("");
   const [duration, setDuration] = useState<string>("0");
@@ -61,36 +112,30 @@ export default function Triage() {
     setSearch("");
   };
 
-  const [result, setResult] = useState<{ label: string; text: string } | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const count = selected.size;
-    let label = "LOW";
-    let text = "Routine outpatient follow-up recommended.";
-    if (count >= 3) {
-      label = "MOD";
-      text = "Moderate concern — consider prompt evaluation.";
-    }
-    if (selected.has("Loss of consciousness") || onset === "sudden") {
-      label = "HIGH";
-      text = "Immediate attention recommended — escalate to emergency services.";
-    }
-    setResult({ label, text });
-    // persist minimal form to sessionStorage for the results view
-    const payload = {
+    const selectedSymptoms = Array.from(selected);
+    const payload: ResultsState = {
       age,
       sex,
       duration: `${duration} ${durationUnit}`,
       onset,
-      symptoms: Array.from(selected),
+      symptoms: selectedSymptoms,
       notes,
+      apiAssessment: {
+        age: Number(age || 0),
+        sex: toBackendSex(sex),
+        symptom_duration_num: Number(duration || 0),
+        symptom_duration_qualifier: toBackendDurationUnit(durationUnit),
+        symptom_onset: toBackendOnset(onset),
+        symptoms: selectedSymptoms.map((symptom) => SYMPTOM_ID_MAP[symptom]).filter(Boolean),
+        notes,
+      },
     };
     try {
       sessionStorage.setItem("assessmentData", JSON.stringify(payload));
     } catch {}
-    // navigate to results page if the app expects it
-    // window.location.href = "../results/index.html";
+    navigate("/results", { state: payload });
   };
 
   return (
@@ -243,11 +288,6 @@ export default function Triage() {
           <button type="submit" className="submit-btn">Run Assessment →</button>
         </div>
       </form>
-
-      <div className="result-banner" id="resultBanner" style={{ display: result ? "block" : "none" }}>
-        <div className="result-label" id="resultLabel">{result?.label}</div>
-        <div className="result-text" id="resultText">{result?.text}</div>
-      </div>
     </div>
   );
 }

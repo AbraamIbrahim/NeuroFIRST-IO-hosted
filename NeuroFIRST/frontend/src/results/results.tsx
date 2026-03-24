@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { getUrgencyScore } from "../api";
 import "./results.css";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -12,6 +14,15 @@ interface PatientData {
   onset?: string;
   symptoms?: string[];
   notes?: string;
+  apiAssessment?: {
+    age: number;
+    sex: "Male" | "Female" | "Other";
+    symptom_duration_num: number;
+    symptom_duration_qualifier: "min" | "hrs" | "days" | "wks" | "mos";
+    symptom_onset: "Sudden" | "Rapid" | "Gradual" | "Fluctuating";
+    symptoms: string[];
+    notes: string;
+  };
 }
 
 interface UrgencyState {
@@ -122,6 +133,8 @@ function DetailCell({ label, value }: DetailCellProps) {
 
 // ── Dev Testing Bar ────────────────────────────────────────────────────────
 
+/** Temporary component to simulate different urgency levels without going through the form. */
+/*
 interface DevBarProps {
   onSetUrgency: (level: UrgencyLevel) => void;
 }
@@ -142,21 +155,63 @@ function DevBar({ onSetUrgency }: DevBarProps) {
     </div>
   );
 }
-
+*/
 // ── Main Component ─────────────────────────────────────────────────────────
 
 export default function Results() {
+  const location = useLocation();
   const [patientData, setPatientData] = useState<PatientData>({});
   const [urgencyLevel, setUrgencyLevel] = useState<UrgencyLevel>("high");
+  const [urgencyScore, setUrgencyScore] = useState<number | null>(null);
+  const [scoreError, setScoreError] = useState<string>("");
 
   useEffect(() => {
-    const data = loadPatientData();
+    const routedData = location.state as PatientData | null;
+    const data = routedData && Object.keys(routedData).length > 0 ? routedData : loadPatientData();
     setPatientData(data);
     setUrgencyLevel(deriveUrgency(data));
-  }, []);
+  }, [location.state]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function fetchUrgencyScore() {
+      if (!patientData.apiAssessment || patientData.apiAssessment.symptoms.length === 0) {
+        setUrgencyScore(null);
+        return;
+      }
+
+      try {
+        setScoreError("");
+        const score = await getUrgencyScore(patientData.apiAssessment);
+        if (!isActive) {
+          return;
+        }
+        setUrgencyScore(typeof score === "number" ? score : null);
+      } catch {
+        if (!isActive) {
+          return;
+        }
+        setScoreError("Unable to load urgency score from the backend.");
+        setUrgencyScore(null);
+      }
+    }
+
+    fetchUrgencyScore();
+
+    return () => {
+      isActive = false;
+    };
+  }, [patientData]);
 
   const urgency = URGENCY_STATES[urgencyLevel];
   const symptoms = patientData.symptoms ?? [];
+  const hasAssessment = Object.values(patientData).some((value) => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return Boolean(value);
+  });
 
   return (
     <>
@@ -165,12 +220,27 @@ export default function Results() {
         <div className="results-hero">
           <div className="badge">Neurology · Results</div>
           <UrgencyRing urgency={urgency} />
+          <p className="results-subtitle">
+            Backend urgency score: {urgencyScore ?? "—"}
+          </p>
           <h1 className="results-title">{urgency.title}</h1>
           <p className="results-subtitle">
             Based on the submitted symptoms and patient profile, this case has
             been flagged as {urgencyLevel} urgency.
           </p>
         </div>
+
+        {scoreError && (
+          <div className="card" style={{ animationDelay: "0.12s" }}>
+            <div className="card-header">
+              <div className="card-icon icon-warn">!</div>
+              <div>
+                <div className="card-title">Urgency score unavailable</div>
+                <div className="card-desc">{scoreError}</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Recommendation banner ── */}
         <div className={`recommendation-banner ${urgency.bannerClass}`}>
@@ -179,6 +249,20 @@ export default function Results() {
           </div>
           <div className="rec-text">{urgency.rec}</div>
         </div>
+
+        {!hasAssessment && (
+          <div className="card" style={{ animationDelay: "0.15s" }}>
+            <div className="card-header">
+              <div className="card-icon icon-warn">↩</div>
+              <div>
+                <div className="card-title">No assessment submitted yet</div>
+                <div className="card-desc">
+                  Complete the triage form first to generate a patient results page.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Patient data card ── */}
         <div className="card" style={{ animationDelay: "0.2s" }}>
@@ -235,9 +319,9 @@ export default function Results() {
 
         {/* ── Actions ── */}
         <div className="actions-row">
-          <a href="../index.html" className="back-btn">
+          <Link to="/" className="back-btn">
             ← New Assessment
-          </a>
+          </Link>
           <button className="submit-btn" onClick={() => window.print()} style={{ maxWidth: 200 }}>
             Print Report
           </button>
@@ -248,7 +332,7 @@ export default function Results() {
           replace the judgment of a licensed medical professional.
         </p>
 
-        <DevBar onSetUrgency={setUrgencyLevel} />
+        {/* <DevBar onSetUrgency={setUrgencyLevel} /> */}
       </div>
     </>
   );
