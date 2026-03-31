@@ -1,2 +1,9 @@
 fastapi
 pydantic
+numpy
+pandas
+scikit-learn
+typing
+openpyxl
+uvicorn
+httpx

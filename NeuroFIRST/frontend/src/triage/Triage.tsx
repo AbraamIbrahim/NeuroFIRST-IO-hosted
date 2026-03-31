@@ -2,27 +2,45 @@ import { useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "./triage.css";
 
-const SYMPTOM_ID_MAP: Record<string, string> = {
-  Headache: "s01",
-  Weakness: "s02",
-  Numbness: "s03",
-  "Vision changes": "s04",
-  "Speech difficulty": "s05",
-  Seizure: "s06",
-  Dizziness: "s07",
-  "Loss of consciousness": "s08",
-};
+interface SymptomEntry {
+  id: string;
+  name: string;
+  detail: string;
+  severity: "high" | "med" | "minor";
+  severityLabel: string;
+  category: string;
+}
 
-const DEFAULT_SYMPTOMS = [
-  "Headache",
-  "Weakness",
-  "Numbness",
-  "Vision changes",
-  "Speech difficulty",
-  "Seizure",
-  "Dizziness",
-  "Loss of consciousness",
+const SYMPTOMS_DATA: SymptomEntry[] = [
+  // Critical
+  { id: 's01', name: 'Sudden Hemiparesis',        detail: 'Acute one-sided motor weakness; suspect stroke until proven otherwise',               severity: 'high',  severityLabel: 'Critical', category: 'Motor'       },
+  { id: 's02', name: 'Rapid Ascending Paralysis', detail: 'Progressive weakness moving upward; classic Guillain-Barré presentation',             severity: 'high',  severityLabel: 'Critical', category: 'Motor'       },
+  { id: 's03', name: 'Thunderclap Headache',      detail: 'Worst headache of life at peak intensity; rule out subarachnoid hemorrhage',           severity: 'high',  severityLabel: 'Critical', category: 'Headache'    },
+  { id: 's04', name: 'Saddle Anesthesia',         detail: 'Perineal numbness; cauda equina syndrome until proven otherwise',                      severity: 'high',  severityLabel: 'Critical', category: 'Sensory'     },
+  { id: 's05', name: 'Aphasia',                   detail: 'Sudden language impairment (expressive or receptive); stroke indicator',               severity: 'high',  severityLabel: 'Critical', category: 'Cognitive'   },
+  { id: 's06', name: 'Sudden Delirium',           detail: 'Acute confusion with fluctuating consciousness; broad differential including sepsis',  severity: 'high',  severityLabel: 'Critical', category: 'Cognitive'   },
+  { id: 's07', name: 'Status Epilepticus',        detail: 'Continuous or repetitive seizure activity lasting >5 minutes',                        severity: 'high',  severityLabel: 'Critical', category: 'Seizure'     },
+  { id: 's08', name: 'Sudden Vision Loss',        detail: 'Monocular or binocular visual loss; CRAO or posterior circulation stroke',             severity: 'high',  severityLabel: 'Critical', category: 'Vision'      },
+  { id: 's09', name: 'Acute Ataxia',              detail: 'Sudden loss of coordination; cerebellar stroke or hemorrhage',                        severity: 'high',  severityLabel: 'Critical', category: 'Coordination'},
+  // Moderate
+  { id: 's10', name: 'Muscle Rigidity',           detail: "Increased tone with cogwheel or lead-pipe quality; Parkinson's or drug-induced",      severity: 'med',   severityLabel: 'Moderate', category: 'Motor'       },
+  { id: 's11', name: 'Progressive Weakness',      detail: 'Gradual bilateral or proximal limb weakness over weeks to months',                    severity: 'med',   severityLabel: 'Moderate', category: 'Motor'       },
+  { id: 's12', name: 'Chronic Neuropathy',        detail: 'Distal sensory loss in glove-and-stocking distribution; systemic cause likely',       severity: 'med',   severityLabel: 'Moderate', category: 'Sensory'     },
+  { id: 's13', name: 'Classic Migraine',          detail: 'Pulsating unilateral headache with aura, nausea, and photophobia',                   severity: 'med',   severityLabel: 'Moderate', category: 'Headache'    },
+  { id: 's14', name: 'Progressive Memory Loss',   detail: 'Declining episodic memory affecting daily function; dementia workup warranted',       severity: 'med',   severityLabel: 'Moderate', category: 'Cognitive'   },
+  { id: 's15', name: 'Chronic Vertigo',           detail: 'Persistent rotational sensation; central vs. peripheral cause requires evaluation',   severity: 'med',   severityLabel: 'Moderate', category: 'Coordination'},
+  { id: 's16', name: 'Double Vision',             detail: 'Binocular diplopia; cranial nerve palsy or brainstem lesion',                         severity: 'med',   severityLabel: 'Moderate', category: 'Vision'      },
+  // Minor
+  { id: 's17', name: 'Benign Fasciculations',     detail: 'Involuntary muscle twitches without weakness; typically benign if isolated',           severity: 'minor', severityLabel: 'Minor',    category: 'Motor'       },
+  { id: 's18', name: 'Essential Tremor',          detail: 'Action tremor of hands; worsens with intentional movement, improves at rest',         severity: 'minor', severityLabel: 'Minor',    category: 'Motor'       },
+  { id: 's19', name: 'Transient Numbness',        detail: 'Brief, fleeting paresthesias without a clear dermatomal pattern',                     severity: 'minor', severityLabel: 'Minor',    category: 'Sensory'     },
+  { id: 's20', name: 'Tension Headache',          detail: 'Bilateral pressure-type headache without nausea or aura',                             severity: 'minor', severityLabel: 'Minor',    category: 'Headache'    },
+  { id: 's21', name: 'Age-Related Lapses',        detail: 'Mild forgetfulness consistent with normal cognitive aging',                            severity: 'minor', severityLabel: 'Minor',    category: 'Cognitive'   },
+  { id: 's22', name: 'Occasional Dizziness',      detail: 'Intermittent lightheadedness or unsteadiness without a positional trigger',           severity: 'minor', severityLabel: 'Minor',    category: 'Coordination'},
+  { id: 's23', name: 'Tinnitus',                  detail: 'Perceived ringing or buzzing without external sound; often benign',                   severity: 'minor', severityLabel: 'Minor',    category: 'Other'       },
 ];
+
+const SYMPTOM_BY_NAME = new Map(SYMPTOMS_DATA.map((s) => [s.name, s]));
 
 function toBackendSex(value: string): "Male" | "Female" | "Other" {
   if (value === "male") return "Male";
@@ -75,13 +93,16 @@ export default function Triage() {
     cancer_treatment: false,
   });
 
-  const [symptoms] = useState<string[]>(DEFAULT_SYMPTOMS);
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(
-    () => symptoms.filter((s) => s.toLowerCase().includes(search.toLowerCase())),
-    [symptoms, search]
+    () => SYMPTOMS_DATA.filter((s) =>
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.detail.toLowerCase().includes(search.toLowerCase()) ||
+      s.category.toLowerCase().includes(search.toLowerCase())
+    ),
+    [search]
   );
 
   const toggleSymptom = (s: string) => {
@@ -128,7 +149,7 @@ export default function Triage() {
         symptom_duration_num: Number(duration || 0),
         symptom_duration_qualifier: toBackendDurationUnit(durationUnit),
         symptom_onset: toBackendOnset(onset),
-        symptoms: selectedSymptoms.map((symptom) => SYMPTOM_ID_MAP[symptom]).filter(Boolean),
+        symptoms: selectedSymptoms.map((name) => SYMPTOM_BY_NAME.get(name)?.id).filter(Boolean) as string[],
         notes,
       },
     };
@@ -246,17 +267,19 @@ export default function Triage() {
 
           <div className="symptom-grid" id="symptomGrid">
             {filtered.map((s) => (
-              <div className="symptom-item" key={s}>
+              <div className="symptom-item" key={s.id}>
                 <input
                   type="checkbox"
-                  id={`sym_${s}`}
-                  checked={selected.has(s)}
-                  onChange={() => toggleSymptom(s)}
+                  id={`sym_${s.id}`}
+                  checked={selected.has(s.name)}
+                  onChange={() => toggleSymptom(s.name)}
                 />
-                <label htmlFor={`sym_${s}`}>
+                <label htmlFor={`sym_${s.id}`}>
                   <div className="check-box" />
                   <div className="symptom-label-content">
-                    <span className="symptom-name">{s}</span>
+                    <span className="symptom-name">{s.name}</span>
+                    <span className="symptom-detail">{s.detail}</span>
+                    <span className={`sev sev-${s.severity}`}>{s.severityLabel}</span>
                   </div>
                 </label>
               </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:32425";
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -18,10 +18,10 @@ export interface UrgencyAssessment {
 }
 
 interface UrgencyScoreResponse {
-  urgency_score: number;
+  urgency: number;
 }
 
 export async function getUrgencyScore(assessment: UrgencyAssessment): Promise<number> {
   const response = await apiClient.post<UrgencyScoreResponse>("/urgency_score", assessment);
-  return response.data.urgency_score;
+  return response.data.urgency;
 }

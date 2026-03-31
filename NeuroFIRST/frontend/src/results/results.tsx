@@ -188,6 +188,11 @@ export default function Results() {
           return;
         }
         setUrgencyScore(typeof score === "number" ? score : null);
+        if (typeof score === "number") {
+          if (score >= 7) setUrgencyLevel("high");
+          else if (score >= 4) setUrgencyLevel("med");
+          else setUrgencyLevel("minor");
+        }
       } catch {
         if (!isActive) {
           return;
@@ -221,7 +226,7 @@ export default function Results() {
           <div className="badge">Neurology · Results</div>
           <UrgencyRing urgency={urgency} />
           <p className="results-subtitle">
-            Backend urgency score: {urgencyScore ?? "—"}
+            Backend urgency score: {urgencyScore != null ? Math.abs(urgencyScore) : "-"}
           </p>
           <h1 className="results-title">{urgency.title}</h1>
           <p className="results-subtitle">
