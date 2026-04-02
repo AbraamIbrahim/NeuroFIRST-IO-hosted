@@ -225,9 +225,9 @@ export default function Results() {
         <div className="results-hero">
           <div className="badge">Neurology · Results</div>
           <UrgencyRing urgency={urgency} />
-          <p className="results-subtitle">
-            Backend urgency score: {urgencyScore != null ? Math.abs(urgencyScore) : "-"}
-          </p>
+            <p className="results-subtitle">
+            Backend urgency score: {urgencyScore != null ? Math.max(urgencyScore, 1) : "-"}
+            </p>
           <h1 className="results-title">{urgency.title}</h1>
           <p className="results-subtitle">
             Based on the submitted symptoms and patient profile, this case has
