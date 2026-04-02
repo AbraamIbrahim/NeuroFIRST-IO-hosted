@@ -81,7 +81,7 @@ def getUrgency(input:UrgencyModel):
     if (freq_counter[Severity.CRITICAL] >= 3): return {"urgency": 10}
     if (freq_counter[Severity.CRITICAL] == 2): return {"urgency": 9}
 
-    symptom_score = freq_counter[Severity.CRITICAL] * 4 + freq_counter[Severity.MODERATE]* 1 + freq_counter[Severity.MINOR] * .25 
+    symptom_score = freq_counter[Severity.CRITICAL] * 7 + freq_counter[Severity.MODERATE]* 1 + freq_counter[Severity.MINOR] * .25 
 
     # Put 50 as the median age. Any less slightly subtracts, any more slightly adds
     # TODO: Make as a curve that biases old people, and children
