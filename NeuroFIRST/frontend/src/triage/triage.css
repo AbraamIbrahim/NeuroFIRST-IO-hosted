@@ -514,3 +514,33 @@ textarea::placeholder { color: var(--muted); opacity: 0.6; }
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+
+.flag-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.flag-sub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  margin-left: 1.75rem;
+}
+
+.flag-sub-field label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+
+.flag-sub-field select {
+  max-width: 200px;
+}
