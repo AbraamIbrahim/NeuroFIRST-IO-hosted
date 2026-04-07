@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:32425";
+const RENDER_API_URL = "https://neurofirst-io.onrender.com"
 
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: RENDER_API_URL,
   timeout: 10000,
 });
 
