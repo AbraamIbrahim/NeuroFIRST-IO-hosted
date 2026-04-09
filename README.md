@@ -17,4 +17,9 @@ A specialized clinical decision support interface built for the NeuroFIRST clini
 
 ## Contributors
 - London Grant (GitHub: @London-Grant)
+<<<<<<< HEAD
 - Albert Yorn (GitHub: @albrtyrn)
+=======
+- Albert Yorn (GitHub: @albrtyrn)
+- Abraam Ibrahim (GitHub @abraamibrahim)
+>>>>>>> 1674be8eb97737718d35a4ee18c0b18a83fe8bba

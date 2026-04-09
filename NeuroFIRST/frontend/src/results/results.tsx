@@ -42,7 +42,7 @@ const URGENCY_STATES: Record<UrgencyLevel, UrgencyState> = {
     level: "HIGH",
     icon: "🚨",
     title: "Immediate Attention Required",
-    rec: "Patient presents with indicators consistent with a high-urgency neurological event. Recommend immediate evaluation by attending neurologist. Do not delay workup pending further observation.",
+    rec: "Clinical findings indicate a high-acuity neurological event. Emergent evaluation by an attending neurologist is recommended. An expedited diagnostic workup should be initiated immediately and should not be deferred for further clinical observation.",
     ringClass: "ring-high",
     bannerClass: "banner-high",
     recLabelColor: "#ef5350",
@@ -50,8 +50,8 @@ const URGENCY_STATES: Record<UrgencyLevel, UrgencyState> = {
   med: {
     level: "MOD",
     icon: "⚠️",
-    title: "Prompt Evaluation Recommended",
-    rec: "Patient presents with moderate-urgency indicators. Schedule evaluation within 24–48 hours. Monitor for symptom escalation and advise the patient to seek emergency care if symptoms worsen.",
+    title: "Manual File Review Recommended",
+    rec: "Clinical findings suggest a case of moderate urgency. Please conduct a manual file review to confirm the most appropriate placement—either via the NeuroFIRST clinic or the broader UVA Health system. Management should include close observation for symptom progression, with clear instructions for the patient to seek emergent care if their status declines.",
     ringClass: "ring-med",
     bannerClass: "banner-med",
     recLabelColor: "#ff9800",
@@ -59,8 +59,8 @@ const URGENCY_STATES: Record<UrgencyLevel, UrgencyState> = {
   minor: {
     level: "LOW",
     icon: "ℹ️",
-    title: "Routine Follow-Up Suggested",
-    rec: "Symptoms appear minor and non-urgent. Recommend routine outpatient follow-up. Patient should be advised to monitor symptoms and return if new or worsening neurological signs develop.",
+    title: "PCP Follow-Up Suggested",
+    rec: "The patient’s symptoms are suggestive of a low-severity case. We recommend deferring further specialist intervention in favor of PCP follow-up. Please advise the patient to monitor for neurological changes and return for assessment if symptoms worsen or fail to resolve.",
     ringClass: "ring-minor",
     bannerClass: "banner-minor",
     recLabelColor: "#2196f3",
@@ -226,7 +226,7 @@ export default function Results() {
           <div className="badge">Neurology · Results</div>
           <UrgencyRing urgency={urgency} />
             <p className="results-subtitle">
-            Backend urgency score: {urgencyScore != null ? Math.max(urgencyScore, 1) : "-"}
+            Algorithmic Urgency Score: {urgencyScore != null ? Math.max(urgencyScore, 1) : "-"}
             </p>
           <h1 className="results-title">{urgency.title}</h1>
           <p className="results-subtitle">

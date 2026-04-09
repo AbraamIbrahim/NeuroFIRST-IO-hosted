@@ -88,9 +88,11 @@ export default function Triage() {
   const [durationUnit, setDurationUnit] = useState<string>("days");
   const [onset, setOnset] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
-  const [flags, setFlags] = useState<Record<string, boolean>>({
+  const [flags, setFlags] = useState<Record<string, boolean | string>>({
     pregnancy: false,
     cancer_treatment: false,
+    previously_seen_neurologist: false,
+    symptoms_worsened: "",
   });
 
   const [search, setSearch] = useState<string>("");
@@ -128,7 +130,7 @@ export default function Triage() {
     setDurationUnit("days");
     setOnset("");
     setNotes("");
-    setFlags({ pregnancy: false, cancer_treatment: false });
+    setFlags({ pregnancy: false, cancer_treatment: false, previously_seen_neurologist: false, symptoms_worsened: "" });
     setSelected(new Set());
     setSearch("");
   };
@@ -184,7 +186,7 @@ export default function Triage() {
           <div className="fields-row">
             <div className="field">
               <label htmlFor="age">
-                Patient Age <span className="required-star">*</span>
+          Patient Age <span className="required-star">*</span>
               </label>
               <input type="number" id="age" name="age" placeholder="e.g. 54" min={0} max={120} value={age} onChange={(e) => setAge(e.target.value)} />
             </div>
@@ -192,38 +194,38 @@ export default function Triage() {
             <div className="field">
               <label htmlFor="sex">Biological Sex</label>
               <select id="sex" name="sex" value={sex} onChange={(e) => setSex(e.target.value)}>
-                <option value="" disabled>Select…</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other / Not specified</option>
+          <option value="" disabled>Select…</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Not specified</option>
               </select>
             </div>
 
             <div className="field">
               <label htmlFor="symptom_duration">
-                Symptom Duration <span className="required-star">*</span>
+          Symptom Duration <span className="required-star">*</span>
               </label>
               <div className="unit-row">
-                <button type="button" className="stepper-btn" id="durationMinus" onClick={() => incrementDuration(-1)}>−</button>
-                <input type="text" inputMode="numeric" maxLength={2} id="symptom_duration" name="symptom_duration" placeholder="0" value={duration} onChange={(e) => setDuration(e.target.value.replace(/[^0-9]/g, ""))} />
-                <button type="button" className="stepper-btn" id="durationPlus" onClick={() => incrementDuration(1)}>+</button>
-                <select className="unit-select" id="duration_unit" name="duration_unit" value={durationUnit} onChange={(e) => setDurationUnit(e.target.value)}>
-                  <option value="hours">hrs</option>
-                  <option value="days">days</option>
-                  <option value="weeks">wks</option>
-                  <option value="months">mos</option>
-                </select>
+          <button type="button" className="stepper-btn" id="durationMinus" onClick={() => incrementDuration(-1)}>−</button>
+          <input type="text" inputMode="numeric" maxLength={2} id="symptom_duration" name="symptom_duration" placeholder="0" value={duration} onChange={(e) => setDuration(e.target.value.replace(/[^0-9]/g, ""))} />
+          <button type="button" className="stepper-btn" id="durationPlus" onClick={() => incrementDuration(1)}>+</button>
+          <select className="unit-select" id="duration_unit" name="duration_unit" value={durationUnit} onChange={(e) => setDurationUnit(e.target.value)}>
+            <option value="hours">hrs</option>
+            <option value="days">days</option>
+            <option value="weeks">wks</option>
+            <option value="months">mos</option>
+          </select>
               </div>
             </div>
 
             <div className="field">
               <label htmlFor="onset">Symptom Onset</label>
               <select id="onset" name="onset" value={onset} onChange={(e) => setOnset(e.target.value)}>
-                <option value="" disabled>Select…</option>
-                <option value="sudden">Sudden / Abrupt</option>
-                <option value="rapid">Rapid (minutes–hours)</option>
-                <option value="gradual">Gradual (days–weeks)</option>
-                <option value="fluctuating">Fluctuating</option>
+          <option value="" disabled>Select…</option>
+          <option value="sudden">Sudden / Abrupt</option>
+          <option value="rapid">Rapid (minutes–hours)</option>
+          <option value="gradual">Gradual (days–weeks)</option>
+          <option value="fluctuating">Fluctuating</option>
               </select>
             </div>
           </div>
@@ -231,25 +233,37 @@ export default function Triage() {
           <div className="flags-label">Clinical Flags</div>
           <div className="flags-row">
             <div className="symptom-item">
-              <input type="checkbox" id="flag_pregnancy" name="flags" checked={flags.pregnancy} onChange={(e) => setFlags((f) => ({ ...f, pregnancy: e.target.checked }))} />
+              <input type="checkbox" id="flag_pregnancy" name="flags" checked={!!flags.pregnancy} onChange={(e) => setFlags((f) => ({ ...f, pregnancy: e.target.checked }))} />
               <label htmlFor="flag_pregnancy">
-                <div className="check-box" />
-                <div className="symptom-label-content">
-                  <span className="symptom-name">Pregnant</span>
-                  <span className="symptom-detail">Current or suspected pregnancy</span>
-                </div>
+          <div className="check-box" />
+          <div className="symptom-label-content">
+            <span className="symptom-name">Pregnant</span>
+            <span className="symptom-detail">Current or suspected pregnancy</span>
+          </div>
               </label>
             </div>
 
-            <div className="symptom-item">
-              <input type="checkbox" id="flag_cancer" name="flags" checked={flags.cancer_treatment} onChange={(e) => setFlags((f) => ({ ...f, cancer_treatment: e.target.checked }))} />
-              <label htmlFor="flag_cancer">
-                <div className="check-box" />
-                <div className="symptom-label-content">
-                  <span className="symptom-name">Undergoing Cancer Treatment</span>
-                  <span className="symptom-detail">Active chemotherapy or immunosuppression</span>
+            <div className="flag-group">
+              <div className="symptom-item">
+                <input type="checkbox" id="flag_neurologist" name="flags" checked={!!flags.previously_seen_neurologist} onChange={(e) => setFlags((f) => ({ ...f, previously_seen_neurologist: e.target.checked, ...(e.target.checked ? {} : { symptoms_worsened: "" }) }))} />
+                <label htmlFor="flag_neurologist">
+                  <div className="check-box" />
+                  <div className="symptom-label-content">
+                    <span className="symptom-name">Previously Seen by Neurologist</span>
+                    <span className="symptom-detail">Patient has had a neurological evaluation</span>
+                  </div>
+                </label>
+              </div>
+              {flags.previously_seen_neurologist && (
+                <div className="flag-sub-field">
+                  <label htmlFor="symptoms_worsened">Have symptoms worsened since?</label>
+                  <select id="symptoms_worsened" name="symptoms_worsened" value={String(flags.symptoms_worsened || "")} onChange={(e) => setFlags((f) => ({ ...f, symptoms_worsened: e.target.value }))}>
+                    <option value="" disabled>Select…</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
                 </div>
-              </label>
+              )}
             </div>
           </div>
         </div>
