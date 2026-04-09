@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Literal
 from enum import Enum
 import ml
+import uvicorn
 
 app = fastapi.FastAPI()
 
@@ -67,6 +68,8 @@ class UrgencyModel(BaseModel):
 
     symptoms: list[str] #The str is the id
     notes:str # Realistically I probably do nothing with this. Maybe keyword search?
+
+    
 
 
 @app.post("/urgency_score")
