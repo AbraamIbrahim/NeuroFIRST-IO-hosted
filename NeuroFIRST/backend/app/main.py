@@ -4,8 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Literal
 from enum import Enum
-import ml
+import ml, math_models as math_wrapper
 import uvicorn
+
 
 app = fastapi.FastAPI()
 
@@ -76,6 +77,7 @@ class UrgencyModel(BaseModel):
 
 @app.post("/urgency_score")
 def getUrgency(input:UrgencyModel):
+    math_function_wrapper = math_wrapper.math_models(input)
     patient_symptoms = input.symptoms
 
     freq_counter = {Severity.CRITICAL: 0, Severity.MODERATE: 0, Severity.MINOR: 0} 
@@ -88,11 +90,9 @@ def getUrgency(input:UrgencyModel):
 
     symptom_score = freq_counter[Severity.CRITICAL] * 7 + freq_counter[Severity.MODERATE]* 1 + freq_counter[Severity.MINOR] * .25 
 
-    # Put 50 as the median age. Any less slightly subtracts, any more slightly adds
-    # TODO: Make as a curve that biases old people, and children
-    symptom_score += (input.age - 50)/100.0
+    # symptom_score += (input.age - 50)/100.0
+    symptom_score += math_function_wrapper.age_multiplier()
 
-    # symptom_score += onset_weights[input.symptom_onset]
     symptom_score += ml.getModifier(symptom_score, input.symptom_onset)
 
     return {"urgency": min(10, round(symptom_score))}
