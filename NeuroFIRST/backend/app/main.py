@@ -7,6 +7,7 @@ from enum import Enum
 import ml, math_models as math_wrapper
 import uvicorn
 
+import uvicorn
 
 app = fastapi.FastAPI()
 
@@ -63,11 +64,11 @@ symptoms = {"s01": {"severity": Severity.CRITICAL},
 
 class UrgencyModel(BaseModel):
     age:int
-    sex:str = Literal['Male', 'Female', 'Other']
+    sex: Literal['Male', 'Female', 'Other']
     symptom_duration_num:int
     symptom_duration_qualifier: Literal['hrs', 'days', 'wks', 'mos']
     # symptom_onset:str = Literal['Sudden', 'Rapid', 'Gradual', 'Fluctuating']
-    symptom_onset:str = Literal['Sudden', 'Rapid', 'Gradual', 'Fluctuating']
+    symptom_onset: Literal['Sudden', 'Rapid', 'Gradual', 'Fluctuating']
 
     symptoms: list[str] #The str is the id
     notes:str # Realistically I probably do nothing with this. Maybe keyword search?
@@ -93,7 +94,7 @@ def getUrgency(input:UrgencyModel):
     # symptom_score += (input.age - 50)/100.0
     symptom_score += math_function_wrapper.age_multiplier()
 
-    symptom_score += ml.getModifier(symptom_score, input.symptom_onset)
+    symptom_score += ml.getModifier(int(symptom_score), input.symptom_onset)
 
     return {"urgency": min(10, round(symptom_score))}
 
