@@ -9,14 +9,9 @@ import uvicorn
 
 import uvicorn
 
+from models import Severity, UrgencyModel
+
 app = fastapi.FastAPI()
-
-class Severity(Enum):
-    CRITICAL = 3
-    MODERATE = 2
-    MINOR = 1
-
-#Allow CORS so that the frontend can call the backend
 origins = [
     "http://localhost:3000",
     "http://localhost:5173",
