@@ -7,3 +7,6 @@ typing
 openpyxl
 uvicorn
 httpx
+pytest
+pytest-mock
+psutil
