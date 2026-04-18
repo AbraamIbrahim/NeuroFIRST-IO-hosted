@@ -1,0 +1,389 @@
+/* ── Variables ──────────────────────────────────────────────────────────── */
+
+:root {
+  --accent: #e57200;
+  --accent2: #ef5350;
+  --surface2: rgba(255, 255, 255, 0.04);
+  --border: rgba(200, 203, 210, 0.12);
+  --text: #e8eaf0;
+  --muted: #8b90a0;
+  --bg: #0d0f14;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(239, 83, 80, 0.2); }
+  50%       { box-shadow: 0 0 55px rgba(239, 83, 80, 0.4); }
+}
+
+@keyframes pulse-med {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.15); }
+  50%       { box-shadow: 0 0 40px rgba(255, 152, 0, 0.30); }
+}
+
+/* ── Badge ──────────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.results-hero {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeDown 0.6s ease both;
+}
+
+.results-title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.results-subtitle {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Urgency Ring ───────────────────────────────────────────────────────── */
+
+.urgency-ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 5px solid var(--accent2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  background: rgba(239, 83, 80, 0.08);
+  box-shadow: 0 0 40px rgba(239, 83, 80, 0.2);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.ring-high {
+  border-color: #ef5350;
+  background: rgba(239, 83, 80, 0.08);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.ring-med {
+  border-color: #ff9800;
+  background: rgba(255, 152, 0, 0.08);
+  box-shadow: 0 0 40px rgba(255, 152, 0, 0.2);
+  animation: pulse-med 4s ease-in-out infinite;
+}
+
+.ring-minor {
+  border-color: #2196f3;
+  background: rgba(33, 150, 243, 0.08);
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.10);
+  animation: none;
+}
+
+.urgency-level {
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: var(--accent2);
+}
+
+.ring-med  .urgency-level { color: #ff9800; }
+.ring-minor .urgency-level { color: #2196f3; }
+
+.urgency-score {
+  font-size: 2.8rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent2);
+}
+
+.ring-med   .urgency-score { color: #ff9800; }
+.ring-minor .urgency-score { color: #2196f3; }
+
+.urgency-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── Recommendation Banner ──────────────────────────────────────────────── */
+
+.recommendation-banner {
+  background: rgba(229, 114, 0, 0.08);
+  border: 1px solid rgba(229, 114, 0, 0.35);
+  border-radius: 14px;
+  padding: 22px 28px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+
+.banner-med {
+  background: rgba(255, 152, 0, 0.08);
+  border-color: rgba(255, 152, 0, 0.40);
+}
+
+.banner-minor {
+  background: rgba(33, 150, 243, 0.06);
+  border-color: rgba(33, 150, 243, 0.25);
+}
+
+.rec-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.rec-text {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.icon-blue {
+  background: rgba(33, 150, 243, 0.12);
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ── Detail Grid ────────────────────────────────────────────────────────── */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 500px) {
+  .detail-grid { grid-template-columns: 1fr; }
+}
+
+.detail-cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.detail-cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.detail-cell-value {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── Symptoms ───────────────────────────────────────────────────────────── */
+
+.symptoms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.symptom-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.symptom-tag.high {
+  border-color: rgba(229, 114, 0, 0.45);
+  background: rgba(229, 114, 0, 0.1);
+  color: #ffb347;
+}
+
+/* ── Actions Row ────────────────────────────────────────────────────────── */
+
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  animation: fadeUp 0.5s ease 0.35s both;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 13px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  border-color: var(--muted);
+  color: var(--text);
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  opacity: 0.85;
+}
+
+/* ── Dev Bar ────────────────────────────────────────────────────────────── */
+
+.dev-bar {
+  margin-top: 32px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: rgba(200, 203, 210, 0.05);
+  border: 1px dashed rgba(200, 203, 210, 0.2);
+  border-radius: 12px;
+}
+
+.dev-bar-label {
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.test-high  { background: #ef5350; max-width: 140px; }
+.test-med   { background: #ff9800; max-width: 140px; }
+.test-minor { background: #2196f3; max-width: 140px; }
+
+/* ── Disclaimer ─────────────────────────────────────────────────────────── */
+
+.disclaimer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 32px;
+  line-height: 1.6;
+  opacity: 0.7;
+}

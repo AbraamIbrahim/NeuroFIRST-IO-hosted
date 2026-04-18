@@ -1,0 +1,12 @@
+fastapi
+pydantic
+numpy
+pandas
+scikit-learn
+typing
+openpyxl
+uvicorn
+httpx
+pytest
+pytest-mock
+psutil

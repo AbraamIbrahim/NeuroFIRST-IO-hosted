@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "dev:frontend": "cd frontend/src && pyv",
+    "dev:backend": "cd backend/app && .venv/bin/uvicorn main:app --host 0.0.0.0 --port 32425 --reload",
+    "dev:full": "npm run dev:backend & npm run dev:frontend",
+    "build:frontend": "cd frontend/src && npm run build",
+    "build:backend": "cd backend/app && pip install -r requirements.txt",
+    "build": "npm run build:backend && npm run build:frontend"
+  },
+  "dependencies": {
+    "axios": "^1.14.0",
+    "react": "^19.2.4",
+    "react-router-dom": "^7.13.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.3"
+  }
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroFIRST Triage Assessment Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="triage.css">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="badge">NeuroFIRST · Clinical Tool</div>
+    <h1>NeuroFIRST <em>Triage</em> Tool</h1>
+    <p class="subtitle">Enter patient demographics and select all presenting neurological symptoms to support triage evaluation.</p>
+  </header>
+
+  <form id="assessmentForm" novalidate>
+
+    <!-- Patient Info -->
+    <div class="card" style="animation-delay:0.05s">
+      <div class="card-header">
+        <div class="card-icon icon-blue">👤</div>
+        <div>
+          <div class="card-title">Patient Information</div>
+          <div class="card-desc">Basic demographic details</div>
+        </div>
+      </div>
+      <div class="fields-row">
+        <div class="field">
+          <label for="age">Patient Age <span class="required-star">*</span></label>
+          <input type="number" id="age" name="age" placeholder="e.g. 54" min="0" max="120">
+        </div>
+        <div class="field">
+          <label for="sex">Biological Sex</label>
+          <select id="sex" name="sex">
+            <option value="" disabled selected>Select…</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Not specified</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="symptom_duration">Symptom Duration <span class="required-star">*</span></label>
+          <div class="unit-row">
+            <button type="button" class="stepper-btn" id="durationMinus">−</button>
+            <input type="text" inputmode="numeric" maxlength="2" id="symptom_duration" name="symptom_duration" placeholder="0">
+            <button type="button" class="stepper-btn" id="durationPlus">+</button>
+            <select class="unit-select" id="duration_unit" name="duration_unit">
+              <option value="hours">hrs</option>
+              <option value="days" selected>days</option>
+              <option value="weeks">wks</option>
+              <option value="months">mos</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="onset">Symptom Onset</label>
+          <select id="onset" name="onset">
+            <option value="" disabled selected>Select…</option>
+            <option value="sudden">Sudden / Abrupt</option>
+            <option value="rapid">Rapid (minutes–hours)</option>
+            <option value="gradual">Gradual (days–weeks)</option>
+            <option value="fluctuating">Fluctuating</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Clinical Flags -->
+      <div class="flags-label">Clinical Flags</div>
+      <div class="flags-row">
+        <div class="symptom-item">
+          <input type="checkbox" id="flag_pregnancy" name="flags" value="pregnancy">
+          <label for="flag_pregnancy">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Pregnant</span>
+              <span class="symptom-detail">Current or suspected pregnancy</span>
+            </div>
+          </label>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" id="flag_cancer" name="flags" value="cancer_treatment">
+          <label for="flag_cancer">
+            <div class="check-box"></div>
+            <div class="symptom-label-content">
+              <span class="symptom-name">Undergoing Cancer Treatment</span>
+              <span class="symptom-detail">Active chemotherapy or immunosuppression</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Neurological Symptoms -->
+    <div class="card" style="animation-delay:0.15s">
+      <div class="card-header">
+        <div class="card-icon icon-warn">🧠</div>
+        <div>
+          <div class="card-title">Neurological Symptoms</div>
+          <div class="card-desc">Select all symptoms currently present</div>
+        </div>
+      </div>
+
+      <input type="text" id="symptomSearch" class="symptom-search" placeholder="Search Symptoms…" autocomplete="off">
+
+      <div class="symptom-grid" id="symptomGrid"></div>
+
+      <div class="symptom-count">
+        <span class="count-pill" id="countPill">0</span>
+        <span>symptom(s) selected</span>
+      </div>
+    </div>
+
+    <!-- Clinical Notes -->
+    <div class="card" style="animation-delay:0.25s">
+      <div class="card-header">
+        <div class="card-icon icon-red">📋</div>
+        <div>
+          <div class="card-title">Clinical Notes</div>
+          <div class="card-desc">Additional context for the evaluating clinician</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" placeholder="e.g. relevant medical history, current medications, recent trauma, pertinent negatives…"></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="submit-row">
+      <button type="button" class="reset-btn" id="resetBtn">Clear Form</button>
+      <button type="submit" class="submit-btn">Run Assessment →</button>
+    </div>
+
+  </form>
+
+  <div class="result-banner" id="resultBanner">
+    <div class="result-label" id="resultLabel"></div>
+    <div class="result-text" id="resultText"></div>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
