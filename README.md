@@ -235,6 +235,7 @@ NeuroFIRST-IO/
 - London Grant (@London-Grant)
 - Albert Yorn (@albrtyrn)
 - Abraam Ibrahim (@abraamibrahim)
+- Ransford Antwi (@ransantwi)
 
 ## License
 
