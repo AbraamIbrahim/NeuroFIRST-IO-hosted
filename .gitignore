@@ -27,3 +27,4 @@ dist-ssr
 **/.venv/
 ./NeuroFIRST/backend/app/venv/*
 __pycache__/
+    
