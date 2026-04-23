@@ -40,7 +40,64 @@ const SYMPTOMS_DATA: SymptomEntry[] = [
   { id: 's23', name: 'Tinnitus',                  detail: 'Perceived ringing or buzzing without external sound; often benign',                   severity: 'minor', severityLabel: 'Minor',    category: 'Other'       },
 ];
 
-const SYMPTOM_BY_NAME = new Map(SYMPTOMS_DATA.map((s) => [s.name, s]));
+const SYMPTOM_BY_NAME = new Map(SYMPTOMS_DATA.map((symptom) => [symptom.name, symptom]));
+
+// Calculate the Levenshtein distance between two strings.
+// This measures the minimum number of single-character edits (insertions, deletions, or substitutions)
+// required to change one string into another. Used for fuzzy matching to handle typos.
+function calculateLevenshteinDistance(firstString: string, secondString: string): number {
+  // Create a 2D matrix to store distances between substrings
+  const distanceMatrix: number[][] = [];
+  
+  // Initialize the matrix with base cases
+  for (let rowIndex = 0; rowIndex <= secondString.length; rowIndex++) {
+    distanceMatrix[rowIndex] = [rowIndex]; // Distance from empty string to secondString[0..rowIndex]
+  }
+  for (let columnIndex = 0; columnIndex <= firstString.length; columnIndex++) {
+    distanceMatrix[0][columnIndex] = columnIndex; // Distance from firstString[0..columnIndex] to empty string
+  }
+  
+  // Fill the matrix using dynamic programming
+  for (let rowIndex = 1; rowIndex <= secondString.length; rowIndex++) {
+    for (let columnIndex = 1; columnIndex <= firstString.length; columnIndex++) {
+      if (secondString.charAt(rowIndex - 1) === firstString.charAt(columnIndex - 1)) {
+        // Characters match, no edit needed
+        distanceMatrix[rowIndex][columnIndex] = distanceMatrix[rowIndex - 1][columnIndex - 1];
+      } else {
+        // Characters don't match, take minimum of three possible edits:
+        // 1. Substitution: replace char in firstString with char in secondString
+        // 2. Insertion: insert char from secondString into firstString
+        // 3. Deletion: delete char from firstString
+        distanceMatrix[rowIndex][columnIndex] = Math.min(
+          distanceMatrix[rowIndex - 1][columnIndex - 1] + 1, // substitution
+          distanceMatrix[rowIndex][columnIndex - 1] + 1,     // insertion
+          distanceMatrix[rowIndex - 1][columnIndex] + 1      // deletion
+        );
+      }
+    }
+  }
+  
+  // The bottom-right cell contains the Levenshtein distance
+  return distanceMatrix[secondString.length][firstString.length];
+}
+
+// Check if the search query matches a target string, either exactly as substring or fuzzily.
+// This allows for typos and partial matches in the symptom search.
+function doesSearchMatchTarget(searchQuery: string, targetText: string): boolean {
+  const normalizedSearch = searchQuery.toLowerCase();
+  const normalizedTarget = targetText.toLowerCase();
+  
+  // First check: exact substring match (case-insensitive)
+  const isSubstringMatch = normalizedTarget.includes(normalizedSearch);
+  
+  // Second check: fuzzy match using Levenshtein distance
+  // Only apply fuzzy matching for searches longer than 2 characters to avoid false positives
+  // Allow up to 2 edits, or fewer edits proportional to search length (max 2)
+  const isFuzzyMatch = normalizedSearch.length > 2 && 
+    calculateLevenshteinDistance(normalizedSearch, normalizedTarget) <= Math.min(2, Math.floor(normalizedSearch.length / 3));
+  
+  return isSubstringMatch || isFuzzyMatch;
+}
 
 function toBackendSex(value: string): "Male" | "Female" | "Other" {
   if (value === "male") return "Male";
@@ -98,11 +155,13 @@ export default function Triage() {
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  const filtered = useMemo(
-    () => SYMPTOMS_DATA.filter((s) =>
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.detail.toLowerCase().includes(search.toLowerCase()) ||
-      s.category.toLowerCase().includes(search.toLowerCase())
+  // Filter symptoms based on search query using fuzzy matching
+  // This allows users to find symptoms even with typos or partial input
+  const filteredSymptoms = useMemo(
+    () => SYMPTOMS_DATA.filter((symptom) =>
+      doesSearchMatchTarget(search, symptom.name) ||
+      doesSearchMatchTarget(search, symptom.detail) ||
+      doesSearchMatchTarget(search, symptom.category)
     ),
     [search]
   );
@@ -280,20 +339,20 @@ export default function Triage() {
           <input type="text" id="symptomSearch" className="symptom-search" placeholder="Search Symptoms…" autoComplete="off" value={search} onChange={(e) => setSearch(e.target.value)} />
 
           <div className="symptom-grid" id="symptomGrid">
-            {filtered.map((s) => (
-              <div className="symptom-item" key={s.id}>
+            {filteredSymptoms.map((symptom) => (
+              <div className="symptom-item" key={symptom.id}>
                 <input
                   type="checkbox"
-                  id={`sym_${s.id}`}
-                  checked={selected.has(s.name)}
-                  onChange={() => toggleSymptom(s.name)}
+                  id={`sym_${symptom.id}`}
+                  checked={selected.has(symptom.name)}
+                  onChange={() => toggleSymptom(symptom.name)}
                 />
-                <label htmlFor={`sym_${s.id}`}>
+                <label htmlFor={`sym_${symptom.id}`}>
                   <div className="check-box" />
                   <div className="symptom-label-content">
-                    <span className="symptom-name">{s.name}</span>
-                    <span className="symptom-detail">{s.detail}</span>
-                    <span className={`sev sev-${s.severity}`}>{s.severityLabel}</span>
+                    <span className="symptom-name">{symptom.name}</span>
+                    <span className="symptom-detail">{symptom.detail}</span>
+                    <span className={`sev sev-${symptom.severity}`}>{symptom.severityLabel}</span>
                   </div>
                 </label>
               </div>
