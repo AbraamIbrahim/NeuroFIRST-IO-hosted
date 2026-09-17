@@ -26,5 +26,6 @@ dist-ssr
 # Python
 **/.venv/
 ./NeuroFIRST/backend/app/venv/*
+./NeuroFIRST/frontend/src/venv/*
 __pycache__/
     

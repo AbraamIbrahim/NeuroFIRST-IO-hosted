@@ -57,18 +57,6 @@ symptoms = {"s01": {"severity": Severity.CRITICAL},
 # onset_weights = {'Sudden': .5, 'Rapid': .25, 'Gradual': -.5, 'Fluctuating': 0}
 
 
-class UrgencyModel(BaseModel):
-    age:int
-    sex: Literal['Male', 'Female', 'Other']
-    symptom_duration_num:int
-    symptom_duration_qualifier: Literal['hrs', 'days', 'wks', 'mos']
-    # symptom_onset:str = Literal['Sudden', 'Rapid', 'Gradual', 'Fluctuating']
-    symptom_onset: Literal['Sudden', 'Rapid', 'Gradual', 'Fluctuating']
-
-    symptoms: list[str] #The str is the id
-    notes:str # Realistically I probably do nothing with this. Maybe keyword search?
-
-
 @app.get("/health", status_code=200)
 def health_check():
     return {"message": "backend is up"}
