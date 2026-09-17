@@ -68,7 +68,10 @@ class UrgencyModel(BaseModel):
     symptoms: list[str] #The str is the id
     notes:str # Realistically I probably do nothing with this. Maybe keyword search?
 
-    
+
+@app.get("/health", status_code=200)
+def health_check():
+    return {"message": "backend is up"}
 
 
 @app.post("/urgency_score")
